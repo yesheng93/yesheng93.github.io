@@ -2,10 +2,10 @@
 permalink:      /:year-:month-:day/:title
 
 # Setup
-title:          Tale
+title:          Ye
 paginate:       5
-baseurl:        "/tale"
-url:            "https://chesterhow.github.io"
+baseurl:        ""
+url:            "https://yesheng93.github.io"
 
 # Assets
 sass:
@@ -17,14 +17,9 @@ markdown:       kramdown
 
 # About
 author:
-  name:         Chester How
-  url:          http://chester.how
-  email:        chesterhow@gmail.com
-
-# Custom vars
-version:        3.4.1
-github:
-  repo:         https://github.com/chesterhow/tale
+  name:         Ye Sheng
+  url:          http://yesheng93.github.com
+  email:        yesheng0523@gmail.com
 
 # Gems
 gems:
