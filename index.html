@@ -12,7 +12,11 @@ title: Home
         <div class="catalogue-line"></div>
 
         <p>
-          {{ post.content | truncatewords: 30 | strip_html }}
+        {% if post.content contains '<!--break-->' %}
+            {{ post.content | split:'<!--break-->' | first | strip_html }}
+        {% else %}
+            {{ post.content | truncatewords: 30 | strip_html }}
+        {% endif %}
         </p>
 
       </div>

@@ -8,6 +8,8 @@ author: "Ye Sheng"
 
 教程前半部分的python知识介绍写的很清晰，读起来基本上不会有什么困难。但是最后部分的python实战编写web app部分，对于代码的详细解释比较少。对于刚接触python的人不是很友好，我最近正好又重新温习一遍这部分教程，干脆做一些代码注解，希望对自己和他人都有帮助。
 
+<!--break-->
+
 先附上该project的[github repo(python 2.7)](https://github.com/michaelliao/awesome-python-webapp)
 
 今天主要关注的是第一天的数据库模块(`www/transwarp/db.py`)。该模块通过python的mysql connector从比较底层(对于一个web framework来说)的实现了数据库sql query的封装。
