@@ -4,9 +4,9 @@ title: "Python SQl DB module"
 author: "Ye Sheng"
 ---
 
-每当有朋友要学习python时，我都会像他/她推荐[廖雪峰的python教程](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000)。这个教程内容全面，讲解思路清晰，无论是刚接触python的初学者还是已经对python有一定经验的程序员，都能从中学到不少东西。像我个人接触python也有几年时间了，时不时还是会去参考一下这个教程。
+每当有朋友要学习python时，我都会像他/她推荐[廖雪峰的python教程](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000)。这个教程内容全面，讲解思路清晰，无论是刚接触python的初学者还是已经对python有一定经验的程序员，都能<!--break-->从中学到不少东西。像我个人接触python也有几年时间了，时不时还是会去参考一下这个教程。
 
-教程前半部分的python知识介绍写的很清晰，读起来基本上不会有什么困难。但是最后部分的python实战编写web app部分，对于代码的详细解释比较少。对于刚接触python的人不是很友好，我最近正好又重新温习一遍这部分教程，干脆做一些代码注解，希望对自己和他人都有帮助<!--break-->。
+教程前半部分的python知识介绍写的很清晰，读起来基本上不会有什么困难。但是最后部分的python实战编写web app部分，对于代码的详细解释比较少。对于刚接触python的人不是很友好，我最近正好又重新温习一遍这部分教程，干脆做一些代码注解，希望对自己和他人都有帮助。
 
 先附上该project的[github repo(python 2.7)](https://github.com/michaelliao/awesome-python-webapp)
 
@@ -120,3 +120,125 @@ def create_engine(user, password, database, host='127.0.0.1', port=3306, **kw):
 
 ```
 这部分做的事情很简单，`engine.connect`可以理解以为是一个configure好的返回具体connection的function。这里廖雪峰又通过`connect`对`_connect`进行wrap，意义不明。直接`self.connect = connect`效果是一样的。
+
+### _ConnectionCtx
+
+```python
+class _ConnectionCtx(object):
+    '''
+    _ConnectionCtx object that can open and close connection context. _ConnectionCtx object can be nested and only the most 
+    outer connection has effect.
+    with connection():
+        pass
+        with connection():
+            pass
+    '''
+    def __enter__(self):
+        global _db_ctx
+        self.should_cleanup = False
+        if not _db_ctx.is_init():
+            _db_ctx.init()
+            self.should_cleanup = True
+        return self
+
+    def __exit__(self, exctype, excvalue, traceback):
+        global _db_ctx
+        if self.should_cleanup:
+            _db_ctx.cleanup()
+
+def connection():
+    '''
+    Return _ConnectionCtx object that can be used by 'with' statement:
+    with connection():
+        pass
+    '''
+    return _ConnectionCtx()
+
+def with_connection(func):
+    '''
+    Decorator for reuse connection.
+    @with_connection
+    def foo(*args, **kw):
+        f1()
+        f2()
+        f3()
+    '''
+    @functools.wraps(func)
+    def _wrapper(*args, **kw):
+        with _ConnectionCtx():
+            return func(*args, **kw)
+    return _wrapper
+```
+这部分主要是提供了with connection和对应的decorator。通过entry时检测connection是否存在来判断是否为nested connection。在exit时只有最外层的connection会cleanup。这样就保证了无论nest多少层，都使用的是全局的同一个connection。
+
+
+### Transaction
+
+```python
+class _TransactionCtx(object):
+    '''
+    _TransactionCtx object that can handle transactions.
+    with _TransactionCtx():
+        pass
+    '''
+
+    def __enter__(self):
+        global _db_ctx
+        self.should_close_conn = False
+        if not _db_ctx.is_init():
+            # needs open a connection first:
+            _db_ctx.init()
+            self.should_close_conn = True
+        _db_ctx.transactions = _db_ctx.transactions + 1
+        logging.info('begin transaction...' if _db_ctx.transactions==1 else 'join current transaction...')
+        return self
+
+    def __exit__(self, exctype, excvalue, traceback):
+        global _db_ctx
+        _db_ctx.transactions = _db_ctx.transactions - 1
+        try:
+            if _db_ctx.transactions==0:
+                if exctype is None:
+                    self.commit()
+                else:
+                    self.rollback()
+        finally:
+            if self.should_close_conn:
+                _db_ctx.cleanup()
+
+    def commit(self):
+        global _db_ctx
+        logging.info('commit transaction...')
+        try:
+            _db_ctx.connection.commit()
+            logging.info('commit ok.')
+        except:
+            logging.warning('commit failed. try rollback...')
+            _db_ctx.connection.rollback()
+            logging.warning('rollback ok.')
+            raise
+
+    def rollback(self):
+        global _db_ctx
+        logging.warning('rollback transaction...')
+        _db_ctx.connection.rollback()
+        logging.info('rollback ok.')
+
+def transaction():
+    return _TransactionCtx()
+
+def with_transaction(func):
+    @functools.wraps(func)
+    def _wrapper(*args, **kw):
+        _start = time.time()
+        with _TransactionCtx():
+            return func(*args, **kw)
+        _profiling(_start)
+    return _wrapper
+```
+
+采用类似之前connection的方法来构建transaction的支持。唯一不同的是，这里通过一个`_db_ctx.transaction`来记录当前的transaction层数，因为`_db_ctx`本身又是个`ThredingLocal`所以transaction计数是线程安全的。整个transaction层数0结束后，成功则commit，失败就rollback。
+
+剩下的代码就是使用写好的DB链接utility来具体执行sql query们主要分为select和update两类。update类会在结束后检测是否在transaction中，如不在则自动commit。这里我觉得是不是直接用个transaction的decorator来的省事些，
+
+写完db部分的utility后，教程的下一节就是编写ORM，通过更为抽象的数据库模型来对数据库进行操作。
