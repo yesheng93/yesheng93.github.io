@@ -6,9 +6,7 @@ author: "Ye Sheng"
 
 每当有朋友要学习python时，我都会像他/她推荐[廖雪峰的python教程](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000)。这个教程内容全面，讲解思路清晰，无论是刚接触python的初学者还是已经对python有一定经验的程序员，都能从中学到不少东西。像我个人接触python也有几年时间了，时不时还是会去参考一下这个教程。
 
-教程前半部分的python知识介绍写的很清晰，读起来基本上不会有什么困难。但是最后部分的python实战编写web app部分，对于代码的详细解释比较少。对于刚接触python的人不是很友好，我最近正好又重新温习一遍这部分教程，干脆做一些代码注解，希望对自己和他人都有帮助。
-
-<!--break-->
+教程前半部分的python知识介绍写的很清晰，读起来基本上不会有什么困难。但是最后部分的python实战编写web app部分，对于代码的详细解释比较少。对于刚接触python的人不是很友好，我最近正好又重新温习一遍这部分教程，干脆做一些代码注解，希望对自己和他人都有帮助<!--break-->。
 
 先附上该project的[github repo(python 2.7)](https://github.com/michaelliao/awesome-python-webapp)
 
