@@ -18,6 +18,7 @@ footer,
 
   &-container {
     margin: 1rem auto;
+    margin-top:.5rem;
     position: relative;
     text-align: center;
   }
@@ -26,8 +27,13 @@ footer,
     @include transition(all .2s ease-out);
     color: $default-color;
     display: inline-block;
+    font-weight:350;
+    letter-spacing: 2px;
     margin: 0;
     padding-right: .2rem;
+    padding-top:0rem;
+    padding-bottom:0rem;
+
 
     &:hover,
     &:focus {

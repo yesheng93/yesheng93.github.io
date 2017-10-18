@@ -1,5 +1,6 @@
-$default-color: #555;
-$default-shade: #353535;
+$default-color: #212529;
+$default-shade: #212529;
+$sub-color:#343a40;
 $default-tint: #aaa;
 $grey-1: #979797;
 $grey-2: #e5e5e5;
@@ -11,7 +12,7 @@ $shadow-color: rgba(0, 0, 0, .2);
 $baskerville: 'Libre Baskerville', 'Times New Roman', Times, serif;
 $palatino: Palatino, 'Palatino LT STD', 'Palatino Linotype', 'Book Antiqua', 'Georgia', serif;
 $sans-font: 'Helvetica Neue', 'Segoe UI', Helvetica, Arial, sans-serif;
-
+$sans-serif: "Noto Sans", "Segoe UI", Roboto, Helvetica, Arial, "source-han-sans-simplified-c", "Hiragino Sans GB", "Microsoft Yahei", sans-serif;
 $monospaced-font: Menlo, Monaco, monospace;
 $code-color: #bf616a;
 
