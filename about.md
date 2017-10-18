@@ -1,15 +1,11 @@
 ---
 layout: post
 title: "About"
-author: "Chester"
+author: "Ye Sheng"
 permalink: /about/
 ---
 
-A friend of mine writes short stories. One sunny day, I asked if he wanted a website to showcase his works and he agreed. I decided to use GitHub Pages to host his site. That way he wouldn't have to buy a domain and a server.
+After was born and raised in Nanjing for 18 years, I came to US for college education. I studied CS and Maths here and then became a software enginner. Currently, I am working on django web development at drchrono in Sunnyvale, CA. 
 
-While doing some research up on GitHub Pages, I accidentally chanced upon this _simple, blog-aware, static site generator_ called [Jekyll](https://jekyllrb.com/) which works really well with GitHub Pages. I figured it would do just fine for my friend and I set about searching for a pretty theme. I wanted a theme with a _book-ish_ vibe. Unfortunately, most of the themes were too modern. Eventually, I caved and begun working on my own theme. With the help of [Poole](https://github.com/poole/poole), the Jekyll Butler, I was able to build **Tale**.
+This blog was built with jekyll(a static site generator) and hosted on github. The goal of this blog is to keep notes about my projects and thoughts. Since I am a native Chinese speaker. Some/Most of the posts would be in Chinese. Since I am not really a ruby programmer, my another interest here is to have my own static site generator written in python.
 
-## Contribute
-Feel free to create an issue or make a pull request on [GitHub](https://github.com/chesterhow/tale).
-
-Thanks for reading!
